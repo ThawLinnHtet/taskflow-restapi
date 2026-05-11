@@ -2,7 +2,7 @@ import prisma from "../../../config/prisma.js";
 import { CreateTaskDTO, UpdateTaskDTO, PaginationQuery, PaginatedResponse, TaskResponseDTO } from "./task.types.js";
 import { deleteFromCloudinary } from "../../../common/utils/cloudinary.js";
 
-const mapToResponseDTO = (task: {
+export const mapToResponseDTO = (task: {
   id: string;
   title: string;
   description: string | null;

@@ -1,5 +1,3 @@
-const teardown = async () => {
-  // Prisma disconnects on process exit; no explicit cleanup needed
-};
+const teardown = async () => {};
 
 export default teardown;

@@ -32,10 +32,10 @@ export const createMeta = (): Meta => ({
   timestamp: new Date().toISOString(),
 });
 
-export const apiSuccess = <T>(res: Response, data: T, statusCode = 200) => {
+export const apiSuccess = <T>(res: Response, data: T, statusCode = 200, extraMeta?: Record<string, unknown>) => {
   return res.status(statusCode).json({
     data,
-    meta: createMeta(),
+    meta: { ...createMeta(), ...extraMeta },
   });
 };
 
@@ -61,5 +61,5 @@ export const apiCreated = <T>(res: Response, data: T) => {
 };
 
 export const apiNoContent = (res: Response) => {
-  return res.status(204).json({ meta: createMeta() });
+  return res.status(204).send();
 };

@@ -1,22 +1,9 @@
 import { Request, Response } from "express";
-import { Task } from "@prisma/client";
 import * as taskService from "./task.service.js";
 import type { TaskResponseDTO, PaginationQuery } from "./task.types.js";
 import { asyncHandler } from "../../../common/utils/asyncHandler.js";
 import { AppError } from "../../../common/errors/AppError.js";
-import { apiSuccess, apiCreated, apiError, apiNoContent, createMeta } from "../../../common/utils/response.js";
-
-
-const mapToResponse = (task: Task): TaskResponseDTO => ({
-  id: task.id,
-  title: task.title,
-  description: task.description ?? undefined,
-  status: task.status,
-  priority: task.priority,
-  userId: task.userId,
-  createdAt: task.createdAt,
-  updatedAt: task.updatedAt,
-});
+import { apiSuccess, apiCreated, apiNoContent } from "../../../common/utils/response.js";
 
 export const createTask = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user!.userId;
@@ -24,7 +11,7 @@ export const createTask = asyncHandler(async (req: Request, res: Response) => {
     throw new AppError("User ID is required", 400);
   }
   const task = await taskService.createTask({ ...req.body, userId });
-  return apiCreated(res, mapToResponse(task));
+  return apiCreated(res, taskService.mapToResponseDTO(task));
 });
 
 export const getAllTasks = asyncHandler(async (req: Request, res: Response) => {
@@ -43,10 +30,7 @@ export const getAllTasks = asyncHandler(async (req: Request, res: Response) => {
     search: req.query.search as string,
   };
   const result = await taskService.getTasksWithPagination(userId, query);
-  return res.status(200).json({
-    data: result.data,
-    meta: { ...createMeta(), pagination: result.meta.pagination },
-  });
+  return apiSuccess(res, result.data, 200, { pagination: result.meta.pagination });
 });
 
 export const getTaskById = asyncHandler(async (req: Request, res: Response) => {
@@ -59,7 +43,7 @@ export const getTaskById = asyncHandler(async (req: Request, res: Response) => {
   if (!task) {
     throw new AppError("Task not found", 404);
   }
-  return apiSuccess(res, mapToResponse(task));
+  return apiSuccess(res, taskService.mapToResponseDTO(task));
 });
 
 export const updateTask = asyncHandler(async (req: Request, res: Response) => {
@@ -72,7 +56,7 @@ export const updateTask = asyncHandler(async (req: Request, res: Response) => {
   if (!task) {
     throw new AppError("Task not found", 404);
   }
-  return apiSuccess(res, mapToResponse(task));
+  return apiSuccess(res, taskService.mapToResponseDTO(task));
 });
 
 export const deleteTask = asyncHandler(async (req: Request, res: Response) => {

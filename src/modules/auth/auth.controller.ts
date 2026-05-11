@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import * as authService from "./auth.service.js";
 import { asyncHandler } from "../../common/utils/asyncHandler.js";
-import { apiSuccess, apiCreated, apiError } from "../../common/utils/response.js";
+import { apiSuccess, apiCreated } from "../../common/utils/response.js";
 import { AppError } from "../../common/errors/AppError.js";
 
 const REFRESH_TOKEN_COOKIE_OPTIONS = {

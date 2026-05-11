@@ -9,6 +9,7 @@ describe("response helpers", () => {
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn().mockReturnThis(),
+      send: jest.fn().mockReturnThis(),
     };
   });
 
@@ -33,9 +34,11 @@ describe("response helpers", () => {
   });
 
   describe("apiNoContent", () => {
-    it("should return 204 with meta", () => {
+    it("should return 204 with no body", () => {
       apiNoContent(res as Response);
       expect(res.status).toHaveBeenCalledWith(204);
+      expect(res.json).not.toHaveBeenCalled();
+      expect(res.send).toHaveBeenCalled();
     });
   });
 
